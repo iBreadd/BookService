@@ -1,18 +1,31 @@
+version: '3.8'
+
 services:
   postgres:
-    image: 'postgres:16.3'
+    image: 'postgres:16.1'
+    container_name: postgres
     environment:
-      - 'POSTGRES_DB=BooksDB'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=booksUser'
+      POSTGRES_DB: bookservice
+      POSTGRES_USER: booksUser
+      POSTGRES_PASSWORD: secret
     ports:
-      - '5433:5433'
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
+      - '5432:5432'
+    volumes:
+      - postgres-data-books:/var/lib/postgresql/data
+
+  application:
+    image: books_api:latest
+    build:
+      context: .
+    ports:
+      - '8081:8081'
+    depends_on:
+      - postgres
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5051:5051"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/bookservice?autoreconnect=true&createDatabaseIfNotExist=true&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: booksUser
+      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+volumes:
+  postgres-data-books:
