@@ -15,6 +15,7 @@ import lombok.Setter;
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false)
     private String title;
