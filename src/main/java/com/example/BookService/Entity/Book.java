@@ -27,6 +27,4 @@ public class Book {
 
     @Column(nullable = false)
     private Integer stock;
-
-    //scram-sha-256
 }
