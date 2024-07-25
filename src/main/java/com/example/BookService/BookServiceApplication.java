@@ -8,9 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Book API", description = "book microservice"))
 public class BookServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(BookServiceApplication.class, args);
 	}
-
 }
