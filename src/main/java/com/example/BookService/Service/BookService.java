@@ -4,8 +4,10 @@ import com.example.BookService.DTO.BookDTO;
 import com.example.BookService.Entity.Book;
 import com.example.BookService.Repository.BookRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,10 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
-
-    public BookService(BookRepository bookRepository) {
+    private final WebClient webClient;
+    public BookService(BookRepository bookRepository, WebClient.Builder webClientBuilder) {
         this.bookRepository = bookRepository;
+        this.webClient=webClientBuilder.baseUrl("http://order-service:8080").build();
     }
 
     private BookDTO toDTO(Book book){
@@ -59,5 +62,23 @@ public class BookService {
         return bookRepository.findByAuthorAndTitle(author, title).stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
+    }
+    public void reduceBookStock(Long bookId, Integer quantity) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        if (book.getStock() >= quantity) {
+            book.setStock(book.getStock() - quantity);
+            bookRepository.save(book);
+
+            webClient.post()
+                    .uri("http://order-service/orders/update-stock")
+                    .bodyValue(Map.of("bookId", bookId, "quantity", quantity))
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+        } else {
+            throw new IllegalArgumentException("Not enough stock available");
+        }
     }
 }
