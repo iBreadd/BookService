@@ -14,14 +14,12 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
 
-    private static final String ORDER_SERVICE_BASE_URL = "http://order-service:8080";
-
     private final BookRepository bookRepository;
     private final WebClient webClient;
 
     public BookService(BookRepository bookRepository, WebClient.Builder webClientBuilder) {
         this.bookRepository = bookRepository;
-        this.webClient = webClientBuilder.baseUrl(ORDER_SERVICE_BASE_URL).build();
+        this.webClient = webClientBuilder.build();
     }
 
     private BookDTO toDTO(Book book) {
