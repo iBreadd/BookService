@@ -82,16 +82,8 @@ public class BookService {
             throw new IllegalArgumentException("Not enough stock available");
         }
 
-        webClient.post()
-                .uri("/orders/update-stock")
-                .bodyValue(Map.of("bookId", bookId, "quantity", quantity))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .doOnSuccess(response -> {
-                    book.setStock(book.getStock() - quantity);
-                    bookRepository.save(book);
-                })
-                .block();
+        book.setStock(book.getStock() - quantity);
+        bookRepository.save(book);
     }
 
     private void validateBookData(BookDTO bookDTO) {

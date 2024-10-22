@@ -55,4 +55,14 @@ public class BookController {
         List<BookDTO> books = bookService.findBooksByAuthorAndTitle(author, title);
         return ResponseEntity.ok(books);
     }
+
+    @PutMapping("/{id}/reduce-stock")
+    public ResponseEntity<Void> reduceStock(@PathVariable Long id, @RequestParam Integer quantity) {
+        try {
+            bookService.reduceBookStock(id, quantity);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
