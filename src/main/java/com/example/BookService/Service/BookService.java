@@ -14,14 +14,12 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
 
-    private static final String ORDER_SERVICE_BASE_URL = "http://order-service:8080";
-
     private final BookRepository bookRepository;
     private final WebClient webClient;
 
     public BookService(BookRepository bookRepository, WebClient.Builder webClientBuilder) {
         this.bookRepository = bookRepository;
-        this.webClient = webClientBuilder.baseUrl(ORDER_SERVICE_BASE_URL).build();
+        this.webClient = webClientBuilder.build();
     }
 
     private BookDTO toDTO(Book book) {
@@ -84,16 +82,8 @@ public class BookService {
             throw new IllegalArgumentException("Not enough stock available");
         }
 
-        webClient.post()
-                .uri("/orders/update-stock")
-                .bodyValue(Map.of("bookId", bookId, "quantity", quantity))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .doOnSuccess(response -> {
-                    book.setStock(book.getStock() - quantity);
-                    bookRepository.save(book);
-                })
-                .block();
+        book.setStock(book.getStock() - quantity);
+        bookRepository.save(book);
     }
 
     private void validateBookData(BookDTO bookDTO) {
