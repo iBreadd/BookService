@@ -1,11 +1,11 @@
 spring:
   application:
-    name: book_service
+    name: bookservice
 
   datasource:
     url: jdbc:postgresql://localhost:5433/bookservice?autoreconnect=true&createDatabaseIfNotExist=true&characterEncoding=utf8
     username: booksUser
-    password: secret
+    password: secret     # Добави парола
     driver-class-name: org.postgresql.Driver
 
   jpa:
