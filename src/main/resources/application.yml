@@ -16,3 +16,7 @@ spring:
 
 server:
   port: 8081
+
+order:
+  service:
+    url: http://localhost:8080 # Добавяме URL за връзка с OrderService
