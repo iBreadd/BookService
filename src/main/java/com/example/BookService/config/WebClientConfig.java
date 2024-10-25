@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${order.service.url:http://order-service:8080}")
+    @Value("${order.service.url}")
     private String orderServiceUrl;
 
     @Bean
