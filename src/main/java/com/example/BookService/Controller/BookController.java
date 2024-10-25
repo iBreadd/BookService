@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
@@ -57,12 +58,23 @@ public class BookController {
     }
 
     @PutMapping("/{id}/reduce-stock")
-    public ResponseEntity<Void> reduceStock(@PathVariable Long id, @RequestParam Integer quantity) {
+    public ResponseEntity<String> reduceStock(@PathVariable Long id, @RequestParam Integer quantity) {
         try {
             bookService.reduceBookStock(id, quantity);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("Stock reduced successfully!");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/{id}/stock")
+    public ResponseEntity<Integer> getStockById(@PathVariable Long id) {
+        Optional<BookDTO> bookDTO = bookService.getBookById(id);
+        if (bookDTO.isPresent()) {
+            return ResponseEntity.ok(bookDTO.get().getStock());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
