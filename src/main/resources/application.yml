@@ -19,4 +19,8 @@ server:
 
 order:
   service:
-    url: http://localhost:8080 # Добавяме URL за връзка с OrderService
+    url: http://orderservice:8080 # Добавяме URL за връзка с OrderService
+
+spring-doc:
+  api-docs:
+    additional-properties-enabled: false
