@@ -8,7 +8,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PdfUtilTest3 {
-    private static final String OUTPUT_DIR = "D:/Лудогорие софт - Стаж/HtmlFileToPDF/";
+    private static final String OUTPUT_DIR = "F:\\LudogorieSoft - стаж\\Project - Valyo\\HtmlFileToPDF";
 
     @Test
     public void testSavePdfToFile() {
